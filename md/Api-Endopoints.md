@@ -13,5 +13,6 @@ RestAPI for the Active Citizen, an app which promotes people to be more engaged 
 
 ### 2. User
 - GET: Get User’s profile 
-  ```/api/user/profile```
-
+  ```/user/profile```
+- PATCH: Change User’s password
+  ```/user/change-paswword```
