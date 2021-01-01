@@ -57,7 +57,7 @@ export class AuthRepository extends Repository<User> {
         return 'User signup successfully';
     }
 
-    async signIn(authCredentialsDto: AuthCredentialsDto, jwtService: JwtService): Promise<{ accessToken: string, user: Partial<User> }> {
+    async login(authCredentialsDto: AuthCredentialsDto, jwtService: JwtService): Promise<{ accessToken: string, user: Partial<User> }> {
         const user = await this.userRepository.getUser(authCredentialsDto.email);
 
         if (!user) {

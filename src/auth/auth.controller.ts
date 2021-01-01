@@ -9,14 +9,14 @@ export class AuthController {
     constructor(private authService: AuthService) {
     }
 
-    @Post('/signup')
+    @Post('/sign-up')
     signUp(@Body() authCredentialsDto: AuthCredentialsDto): Promise<string> {
         return this.authService.signUp(authCredentialsDto);
     }
 
-    @Post('/signin')
-    signIn(@Body() authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string, user: Partial<User> }> {
-        return this.authService.signIn(authCredentialsDto);
+    @Post('/login')
+    login(@Body() authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string, user: Partial<User> }> {
+        return this.authService.login(authCredentialsDto);
     }
 
     @Patch('/activate')

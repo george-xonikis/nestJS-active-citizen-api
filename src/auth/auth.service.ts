@@ -18,8 +18,8 @@ export class AuthService {
         return await this.authRepository.signUp(authCredentialsDto);
     }
 
-    async signIn(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string, user: Partial<User> }> {
-        const {user, accessToken} = await this.authRepository.signIn(authCredentialsDto, this.jwtService);
+    async login(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string, user: Partial<User> }> {
+        const {user, accessToken} = await this.authRepository.login(authCredentialsDto, this.jwtService);
         return {accessToken, user};
     }
 
