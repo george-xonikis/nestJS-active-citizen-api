@@ -10,7 +10,9 @@ RestAPI for the Active Citizen, an app which promotes people to be more engaged 
   ```/auth/signup/activate/ ```
 - POST: Login (get JWT)
   ```/auth/login/  ```
-
+- POST: Reset password (send email with reset instructions)
+  ```/auth/login/  ```
+  
 ### 2. User
 - GET: Get User’s profile 
   ```/user/profile```

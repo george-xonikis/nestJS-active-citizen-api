@@ -4,13 +4,13 @@ import {UserRepository} from './user.repository';
 import {extractUserProfile} from '../dto/auth-credentials.dto';
 import {User} from './user.entity';
 import {ChangePasswordDto} from '../dto/change-password.dto';
-import {AuthRepository} from '../auth.repository';
+import {AuthService} from '../auth.service';
 
 
 @Injectable()
 export class UserService {
     constructor(@InjectRepository(UserRepository) private userRepository: UserRepository,
-                private authRepository: AuthRepository) {
+                private authService: AuthService) {
     }
 
     async getUserProfile(user: User): Promise<Partial<User>> {
@@ -22,7 +22,7 @@ export class UserService {
             throw new BadRequestException('Passwords do not match');
         }
 
-        const isPasswordValid = await this.authRepository.isPasswordValid(changePasswordDto.password, user.password, user.salt);
+        const isPasswordValid = await this.authService.isPasswordValid(changePasswordDto.password, user.password, user.salt);
         if (!isPasswordValid) {
             throw new UnauthorizedException('Invalid credentials');
         }

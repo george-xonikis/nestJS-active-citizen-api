@@ -1,9 +1,6 @@
 import {Repository, EntityRepository} from 'typeorm';
 import {BadRequestException, ConflictException, InternalServerErrorException, UnauthorizedException} from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
 import {AuthCredentialsDto, extractUserProfile, getActivationCode} from './dto/auth-credentials.dto';
-import {JwtPayload} from './jwt/jwt-payload.interface';
-import {JwtService} from '@nestjs/jwt';
 import {UserRepository} from './user/user.repository';
 import {sendRegistrationEmail} from './utils/send-registration-email';
 import {User} from './user/user.entity';
@@ -16,7 +13,7 @@ export class AuthRepository extends Repository<User> {
         super();
     }
 
-    async createUser(authCredentialsDto: AuthCredentialsDto): Promise<{ status, user, message }> {
+    async createUser(authCredentialsDto: AuthCredentialsDto, hashedPassword: string, salt: string): Promise<{ status, user, message }> {
         const {email, password} = authCredentialsDto;
 
         const user = new User();
@@ -24,8 +21,8 @@ export class AuthRepository extends Repository<User> {
         user.username = email;
         user.isAdmin = false;
         user.activationCode = getActivationCode();
-        user.salt = await bcrypt.genSalt();
-        user.password = await this.hashPassword(password, user.salt);
+        user.salt = salt;
+        user.password = hashedPassword;
 
         try {
             await user.save();
@@ -44,34 +41,23 @@ export class AuthRepository extends Repository<User> {
         }
     }
 
-    async signUp(authCredentialsDto: AuthCredentialsDto): Promise<string> {
-        const {status, user, message} = await this.createUser(authCredentialsDto);
+    async signUp(authCredentialsDto: AuthCredentialsDto, hashedPassword: string, salt: string): Promise<string> {
+        const {status, user, message} = await this.createUser(authCredentialsDto, hashedPassword, salt);
         const isEmailSent = await sendRegistrationEmail(user.email, user.activationCode);
 
         if (!isEmailSent) {
-            /** If email was failed, deleted the created user instance since without the email the user cannot be activated */
+            /** If email was failed, delete the created user instance since without the email the user cannot be activated */
             await this.userRepository.deleteUser(user.email);
-            return 'Registration email was not sent';
+            throw new InternalServerErrorException(null, 'Registration email was not sent');
         }
 
         return 'User signup successfully';
     }
 
-    async login(authCredentialsDto: AuthCredentialsDto, jwtService: JwtService): Promise<{ accessToken: string, user: Partial<User> }> {
-        const user = await this.userRepository.getUser(authCredentialsDto.email);
-
-        if (!user) {
-            throw new UnauthorizedException('Invalid credentials');
-        }
-
-        const isPasswordValid = await this.isPasswordValid(authCredentialsDto.password, user.password, user.salt);
-
+    async login(user: User, isPasswordValid: boolean, accessToken: string): Promise<{ accessToken: string, user: Partial<User> }> {
         if (!isPasswordValid) {
             throw new UnauthorizedException('Invalid credentials');
         }
-
-        const payload: JwtPayload = {email: user.username, role: 'admin'};
-        const accessToken = await jwtService.sign(payload);
 
         return {accessToken, user: extractUserProfile(user)};
     }
@@ -88,14 +74,5 @@ export class AuthRepository extends Repository<User> {
         throw new BadRequestException('Invalid Email or Activation Code');
     }
 
-    /** Helper methods */
-    public async isPasswordValid(passwordInput: string, password: string, salt: string): Promise<boolean> {
-        const hash = await bcrypt.hash(passwordInput, salt);
-        return hash === password;
-    }
-
-    public async hashPassword(password: string, salt: string): Promise<string> {
-        return bcrypt.hash(password, salt);
-    }
 
 }
