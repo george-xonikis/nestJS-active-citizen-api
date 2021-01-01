@@ -18,8 +18,9 @@ export class AuthService {
         return await this.authRepository.signUp(authCredentialsDto);
     }
 
-    async signIn(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
-        return this.authRepository.signIn(authCredentialsDto, this.jwtService);
+    async signIn(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string, user: Partial<User> }> {
+        const {user, accessToken} = await this.authRepository.signIn(authCredentialsDto, this.jwtService);
+        return {accessToken, user};
     }
 
     async activateUser(userActivationDto: UserActivationDto): Promise<Partial<User>> {
@@ -27,7 +28,6 @@ export class AuthService {
         const decodedActivationCode = Base64.decode(userActivationDto.activationCode);
         return this.authRepository.activateUser(decodedEmail, decodedActivationCode);
     }
-
 
 
 }

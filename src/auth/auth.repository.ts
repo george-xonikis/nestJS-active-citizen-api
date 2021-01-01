@@ -57,7 +57,7 @@ export class AuthRepository extends Repository<User> {
         return 'User signup successfully';
     }
 
-    async signIn(authCredentialsDto: AuthCredentialsDto, jwtService: JwtService): Promise<{ accessToken: string }> {
+    async signIn(authCredentialsDto: AuthCredentialsDto, jwtService: JwtService): Promise<{ accessToken: string, user: Partial<User> }> {
         const user = await this.userRepository.getUser(authCredentialsDto.email);
 
         if (!user) {
@@ -72,7 +72,8 @@ export class AuthRepository extends Repository<User> {
 
         const payload: JwtPayload = {email: user.username, role: 'admin'};
         const accessToken = await jwtService.sign(payload);
-        return {accessToken};
+
+        return {accessToken, user: extractUserProfile(user)};
     }
 
     async activateUser(email: string, activationCode: string): Promise<Partial<User>> {
