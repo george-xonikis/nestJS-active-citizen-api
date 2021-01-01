@@ -1,12 +1,12 @@
 import {Repository, EntityRepository} from 'typeorm';
 import {BadRequestException, ConflictException, InternalServerErrorException, UnauthorizedException} from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import {User} from './user.entity';
 import {AuthCredentialsDto, extractUserProfile, getActivationCode} from './dto/auth-credentials.dto';
 import {JwtPayload} from './jwt/jwt-payload.interface';
 import {JwtService} from '@nestjs/jwt';
 import {UserRepository} from './user/user.repository';
 import {sendRegistrationEmail} from './utils/send-registration-email';
+import {User} from './user/user.entity';
 
 
 @EntityRepository(User)

@@ -3,9 +3,9 @@ import {JwtService} from '@nestjs/jwt';
 import {InjectRepository} from '@nestjs/typeorm';
 import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 import {AuthRepository} from './auth.repository';
-import {User} from './user.entity';
 import {UserActivationDto} from './dto/user-activation.dto';
 import {Base64} from 'js-base64';
+import {User} from './user/user.entity';
 
 
 @Injectable()
