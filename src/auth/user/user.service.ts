@@ -5,7 +5,6 @@ import {extractUserProfile} from '../dto/auth-credentials.dto';
 import {User} from './user.entity';
 import {ChangePasswordDto} from '../dto/change-password.dto';
 import {AuthRepository} from '../auth.repository';
-import {IUserResponse} from './user.controller';
 
 
 @Injectable()
@@ -15,11 +14,10 @@ export class UserService {
     }
 
     async getUserProfile(user: User): Promise<Partial<User>> {
-        const _user = await this.userRepository.getUser(user.email);
-        return extractUserProfile(_user);
+        return extractUserProfile(user);
     }
 
-    async changePassword(user: User, changePasswordDto: ChangePasswordDto): Promise<IUserResponse> {
+    async changePassword(user: User, changePasswordDto: ChangePasswordDto): Promise<Partial<User>> {
         if (changePasswordDto.newPassword !== changePasswordDto.passwordRepeat) {
             throw new BadRequestException('Passwords do not match');
         }
@@ -31,11 +29,7 @@ export class UserService {
 
         await this.userRepository.saveUser(user);
 
-        return {
-            status: 201,
-            message: 'Password changed successfully',
-            user: extractUserProfile(user)
-        };
+        return extractUserProfile(user);
     };
     
 }

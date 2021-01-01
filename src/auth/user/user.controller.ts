@@ -5,12 +5,6 @@ import {UserService} from './user.service';
 import {User} from './user.entity';
 import {ChangePasswordDto} from '../dto/change-password.dto';
 
-export interface IUserResponse {
-    status: number;
-    message: string
-    user?: Partial<User>;
-}
-
 @Controller('user')
 @UseGuards(AuthGuard())
 export class UserController {
@@ -23,7 +17,7 @@ export class UserController {
     }
 
     @Patch('/change-password')
-    changePassword(@GetUser() user: User, @Body() changePasswordDto: ChangePasswordDto): Promise<IUserResponse> {
+    changePassword(@GetUser() user: User, @Body() changePasswordDto: ChangePasswordDto): Promise<Partial<User>> {
         return this.userService.changePassword(user, changePasswordDto);
     }
 

@@ -44,23 +44,17 @@ export class AuthRepository extends Repository<User> {
         }
     }
 
-    async signUp(authCredentialsDto: AuthCredentialsDto): Promise<{ status, message }> {
+    async signUp(authCredentialsDto: AuthCredentialsDto): Promise<string> {
         const {status, user, message} = await this.createUser(authCredentialsDto);
         const isEmailSent = await sendRegistrationEmail(user.email, user.activationCode);
 
         if (!isEmailSent) {
             /** If email was failed, deleted the created user instance since without the email the user cannot be activated */
             await this.userRepository.deleteUser(user.email);
-            return {
-                status: 500,
-                message: 'Registration email was not sent'
-            };
+            return 'Registration email was not sent';
         }
 
-        return {
-            status: 201,
-            message: 'User signup successfully'
-        };
+        return 'User signup successfully';
     }
 
     async signIn(authCredentialsDto: AuthCredentialsDto, jwtService: JwtService): Promise<{ accessToken: string }> {
