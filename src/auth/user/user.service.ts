@@ -27,7 +27,7 @@ export class UserService {
             throw new UnauthorizedException('Invalid credentials');
         }
 
-        user.password = changePasswordDto.newPassword;
+        user.password = await this.authService.hashPassword(changePasswordDto.newPassword, user.salt);
         await this.userRepository.saveUser(user);
 
         return extractUserProfile(user);
