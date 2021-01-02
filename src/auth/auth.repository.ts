@@ -1,5 +1,5 @@
 import {Repository, EntityRepository} from 'typeorm';
-import {BadRequestException, ConflictException, InternalServerErrorException, UnauthorizedException} from '@nestjs/common';
+import {BadRequestException, ConflictException, InternalServerErrorException} from '@nestjs/common';
 import {AuthCredentialsDto, extractUserProfile, getActivationCode} from './dto/auth-credentials.dto';
 import {UserRepository} from './user/user.repository';
 import {sendRegistrationEmail} from './utils/send-registration-email';
@@ -13,7 +13,7 @@ export class AuthRepository extends Repository<User> {
         super();
     }
 
-    async createUser(authCredentialsDto: AuthCredentialsDto, hashedPassword: string, salt: string): Promise<{ status, user, message }> {
+    async createUser(authCredentialsDto: AuthCredentialsDto, hashedPassword: string, salt: string): Promise<User> {
         const {email, password} = authCredentialsDto;
 
         const user = new User();
@@ -27,11 +27,8 @@ export class AuthRepository extends Repository<User> {
         try {
             await user.save();
 
-            return {
-                status: 201,
-                user: user,
-                message: 'User created successfully'
-            };
+            return user;
+
         } catch (error) {
             if (error.code === '23505') { // duplicated email
                 throw new ConflictException('Email already exists');
@@ -42,7 +39,7 @@ export class AuthRepository extends Repository<User> {
     }
 
     async signUp(authCredentialsDto: AuthCredentialsDto, hashedPassword: string, salt: string): Promise<string> {
-        const {status, user, message} = await this.createUser(authCredentialsDto, hashedPassword, salt);
+        const user = await this.createUser(authCredentialsDto, hashedPassword, salt);
         const isEmailSent = await sendRegistrationEmail(user.email, user.activationCode);
 
         if (!isEmailSent) {
@@ -54,24 +51,16 @@ export class AuthRepository extends Repository<User> {
         return 'User signup successfully';
     }
 
-    async login(user: User, isPasswordValid: boolean, accessToken: string): Promise<{ accessToken: string, user: Partial<User> }> {
-        if (!isPasswordValid) {
-            throw new UnauthorizedException('Invalid credentials');
-        }
-
-        return {accessToken, user: extractUserProfile(user)};
-    }
-
     async activateUser(email: string, activationCode: string): Promise<Partial<User>> {
         const user = await this.userRepository.getUser(email);
 
-        if (user.activationCode === activationCode) {
-            user.active = true;
-            await user.save();
-            return extractUserProfile(user);
+        if (user.activationCode !== activationCode) {
+            throw new BadRequestException('Invalid Email or Activation Code');
         }
 
-        throw new BadRequestException('Invalid Email or Activation Code');
+        user.active = true;
+        await user.save();
+        return extractUserProfile(user);
     }
 
 

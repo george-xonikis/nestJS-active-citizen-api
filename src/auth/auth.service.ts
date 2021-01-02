@@ -1,7 +1,7 @@
-import {Injectable, InternalServerErrorException} from '@nestjs/common';
+import {Injectable, InternalServerErrorException, UnauthorizedException} from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {InjectRepository} from '@nestjs/typeorm';
-import {AuthCredentialsDto} from './dto/auth-credentials.dto';
+import {AuthCredentialsDto, extractUserProfile} from './dto/auth-credentials.dto';
 import {AuthRepository} from './auth.repository';
 import {UserActivationDto} from './dto/user-activation.dto';
 import {Base64} from 'js-base64';
@@ -28,18 +28,23 @@ export class AuthService {
     }
 
     async login(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string, user: Partial<User> }> {
-        const _user = await this.userRepository.getUser(authCredentialsDto.email);
+        const user = await this.userRepository.getUser(authCredentialsDto.email);
 
-        const _accessToken = this.generateToken(_user.email);
-        const isPasswordValid = await this.isPasswordValid(authCredentialsDto.password, _user.password, _user.salt);
-        const {user, accessToken} = await this.authRepository.login(_user, isPasswordValid, _accessToken);
+        const accessToken = this.generateToken(user.email);
 
-        return {accessToken, user};
+        const isPasswordValid = await this.isPasswordValid(authCredentialsDto.password, user.password, user.salt);
+
+        if (!isPasswordValid) {
+            throw new UnauthorizedException('Invalid credentials');
+        }
+
+        return {accessToken, user: extractUserProfile(user)};
     }
 
     async activateUser(userActivationDto: UserActivationDto): Promise<Partial<User>> {
         const decodedEmail = Base64.decode(userActivationDto.email);
         const decodedActivationCode = Base64.decode(userActivationDto.activationCode);
+
         return this.authRepository.activateUser(decodedEmail, decodedActivationCode);
     }
 
@@ -49,6 +54,7 @@ export class AuthService {
         const temporaryToken = this.generateToken(resetCredentialsDto.email, 60 * 60 * 24); // Expires in 24 hours
 
         const isEmailSent = await sendPasswordResetEmail(resetCredentialsDto.email, temporaryToken);
+
         if (!isEmailSent) {
             throw new InternalServerErrorException(null, 'Password reset email was not sent');
         }

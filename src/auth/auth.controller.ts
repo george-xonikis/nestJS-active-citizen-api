@@ -10,7 +10,7 @@ export class AuthController {
     constructor(private authService: AuthService) {
     }
 
-    @Post('/sign-up')
+    @Post('/signup')
     signUp(@Body() authCredentialsDto: AuthCredentialsDto): Promise<string> {
         return this.authService.signUp(authCredentialsDto);
     }
@@ -20,7 +20,7 @@ export class AuthController {
         return this.authService.login(authCredentialsDto);
     }
 
-    @Patch('/activate')
+    @Patch('/signup/activate')
     activateUser(@Body() userActivationDto: UserActivationDto): Promise<Partial<User>> {
         return this.authService.activateUser(userActivationDto);
     }
