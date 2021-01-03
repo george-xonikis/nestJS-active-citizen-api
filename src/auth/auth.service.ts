@@ -44,6 +44,10 @@ export class AuthService {
     async login(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string, user: Partial<User> }> {
         const user = await this.userRepository.getUser(authCredentialsDto.email);
 
+        if (!user.active) {
+            throw new UnauthorizedException('User is not activated');
+        }
+
         const accessToken = this.generateToken(user.email);
 
         const isPasswordValid = await this.isPasswordValid(authCredentialsDto.password, user.password, user.salt);
