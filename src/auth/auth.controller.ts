@@ -3,7 +3,8 @@ import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 import {AuthService} from './auth.service';
 import {UserActivationDto} from './dto/user-activation.dto';
 import {User} from './user/user.entity';
-import {ResetCredentialsDto} from './dto/reset-password.dto';
+import {ResetPasswordDto} from './dto/reset-password.dto';
+import {ResetPasswordConfirmDto} from './dto/reset-password-confirm.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -26,13 +27,13 @@ export class AuthController {
     }
 
     @Post('/reset-password')
-    resetPassword(@Body() resetCredentialsDto: ResetCredentialsDto): Promise<void> {
-        return this.authService.resetPassword(resetCredentialsDto);
+    resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<void> {
+        return this.authService.resetPassword(resetPasswordDto);
     }
 
-    // @Post('/reset-password/confirm')
-    // resetPasswordConfirm(@Body() email: string): Promise<void> {
-    //     return this.authService.resetPassword(email);
-    // }
+    @Post('/reset-password/confirm')
+    resetPasswordConfirm(@Body() resetPasswordConfirmDto: ResetPasswordConfirmDto): Promise<Partial<User>> {
+        return this.authService.resetPasswordConfirm(resetPasswordConfirmDto);
+    }
 
 }

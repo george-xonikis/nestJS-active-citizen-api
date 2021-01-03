@@ -17,8 +17,7 @@ export class UserRepository extends Repository<User> {
     }
 
     async saveUser(user: User): Promise<User> {
-        await user.save();
-        return user;
+        return await user.save();
     }
 
     async deleteUser(email: string): Promise<any> {

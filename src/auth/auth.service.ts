@@ -1,4 +1,4 @@
-import {Injectable, InternalServerErrorException, UnauthorizedException} from '@nestjs/common';
+import {BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException} from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {InjectRepository} from '@nestjs/typeorm';
 import {AuthCredentialsDto, extractUserProfile} from './dto/auth-credentials.dto';
@@ -10,7 +10,10 @@ import * as bcrypt from 'bcryptjs';
 import {UserRepository} from './user/user.repository';
 import {sendPasswordResetEmail} from './utils/send-password-reset-email';
 import * as config from 'config';
-import {ResetCredentialsDto} from './dto/reset-password.dto';
+import {ResetPasswordDto} from './dto/reset-password.dto';
+import {ResetPasswordConfirmDto} from './dto/reset-password-confirm.dto';
+import {sendRegistrationEmail} from './utils/send-registration-email';
+
 
 const jwtConfig = config.get('jwt');
 
@@ -24,7 +27,17 @@ export class AuthService {
     async signUp(authCredentialsDto: AuthCredentialsDto): Promise<string> {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await this.hashPassword(authCredentialsDto.password, salt);
-        return await this.authRepository.signUp(authCredentialsDto, hashedPassword, salt);
+
+        const user = await this.authRepository.createUser(authCredentialsDto, hashedPassword, salt);
+        const isEmailSent = await sendRegistrationEmail(user.email, user.activationCode);
+
+        if (!isEmailSent) {
+            /** If email was failed, delete the created user instance since without the email the user cannot be activated */
+            await this.userRepository.deleteUser(user.email);
+            throw new InternalServerErrorException(null, 'Registration email was not sent');
+        }
+
+        return 'User signup successfully';
     }
 
     async login(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string, user: Partial<User> }> {
@@ -48,16 +61,38 @@ export class AuthService {
         return this.authRepository.activateUser(decodedEmail, decodedActivationCode);
     }
 
-    async resetPassword(resetCredentialsDto: ResetCredentialsDto): Promise<void> {
-        await this.userRepository.getUser(resetCredentialsDto.email);
+    async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
+        await this.userRepository.getUser(resetPasswordDto.email);
 
-        const temporaryToken = this.generateToken(resetCredentialsDto.email, 60 * 60 * 24); // Expires in 24 hours
+        const temporaryToken = this.generateToken(resetPasswordDto.email, 60 * 60 * 24); // Expires in 24 hours
 
-        const isEmailSent = await sendPasswordResetEmail(resetCredentialsDto.email, temporaryToken);
+        const isEmailSent = await sendPasswordResetEmail(resetPasswordDto.email, temporaryToken);
 
         if (!isEmailSent) {
             throw new InternalServerErrorException(null, 'Password reset email was not sent');
         }
+    }
+
+    async resetPasswordConfirm(resetPasswordConfirmDto: ResetPasswordConfirmDto): Promise<Partial<User>> {
+        if (resetPasswordConfirmDto.newPassword !== resetPasswordConfirmDto.passwordRepeat) {
+            throw new BadRequestException('Passwords do not match');
+        }
+
+        try {
+            const payload = this.jwtService.verify(resetPasswordConfirmDto.token);
+            const email = payload.email;
+
+            if (email === resetPasswordConfirmDto.email) {
+                const user = await this.userRepository.getUser(email);
+                user.password = await this.hashPassword(resetPasswordConfirmDto.newPassword, user.salt);
+                await this.userRepository.saveUser(user);
+                return extractUserProfile(user);
+            }
+
+        } catch (err) {
+            throw new UnauthorizedException('Invalid credentials');
+        }
+
     }
 
     /** Helper methods */

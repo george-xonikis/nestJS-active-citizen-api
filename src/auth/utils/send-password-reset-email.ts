@@ -20,7 +20,8 @@ export const sendPasswordResetEmail = async (email: string, token: string, link?
             from: emailConfig.from,
             to: email,
             subject: 'Active Citizen - Reset Password',
-            html: passwordResetEmailHtml(Base64.encode(token), Base64.encode(token), link)
+            // html: passwordResetEmailHtml(Base64.encode(email), Base64.encode(token), link)
+            html: passwordResetEmailHtml(Base64.encode(email), token, link)
         });
 
         return true;

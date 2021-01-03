@@ -5,13 +5,15 @@ RestAPI for the Active Citizen, an app which promotes people to be more engaged 
 
 ### 1. Auth
 - POST: Register (send email activation code)
-  ```/auth/signup/```
+  ```/auth/signup```
 - PATCH: User Activation (activate a new user using the activation code which was sent via email)
-  ```/auth/signup/activate/ ```
+  ```/auth/signup/activate```
 - POST: Login (get JWT)
-  ```/auth/login/  ```
+  ```/auth/login```
 - POST: Reset password (send email with reset instructions)
-  ```/auth/login/  ```
+  ```/auth/reset-password```
+- POST: Reset password confirm
+  ```/auth/reset-password/confirm```  
   
 ### 2. User
 - GET: Get User’s profile 

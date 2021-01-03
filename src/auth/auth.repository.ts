@@ -1,8 +1,7 @@
 import {Repository, EntityRepository} from 'typeorm';
-import {BadRequestException, ConflictException, InternalServerErrorException} from '@nestjs/common';
+import {BadRequestException, ConflictException, InternalServerErrorException, UnauthorizedException} from '@nestjs/common';
 import {AuthCredentialsDto, extractUserProfile, getActivationCode} from './dto/auth-credentials.dto';
 import {UserRepository} from './user/user.repository';
-import {sendRegistrationEmail} from './utils/send-registration-email';
 import {User} from './user/user.entity';
 
 
@@ -38,19 +37,6 @@ export class AuthRepository extends Repository<User> {
         }
     }
 
-    async signUp(authCredentialsDto: AuthCredentialsDto, hashedPassword: string, salt: string): Promise<string> {
-        const user = await this.createUser(authCredentialsDto, hashedPassword, salt);
-        const isEmailSent = await sendRegistrationEmail(user.email, user.activationCode);
-
-        if (!isEmailSent) {
-            /** If email was failed, delete the created user instance since without the email the user cannot be activated */
-            await this.userRepository.deleteUser(user.email);
-            throw new InternalServerErrorException(null, 'Registration email was not sent');
-        }
-
-        return 'User signup successfully';
-    }
-
     async activateUser(email: string, activationCode: string): Promise<Partial<User>> {
         const user = await this.userRepository.getUser(email);
 
@@ -62,6 +48,5 @@ export class AuthRepository extends Repository<User> {
         await user.save();
         return extractUserProfile(user);
     }
-
 
 }

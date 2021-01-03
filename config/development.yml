@@ -5,5 +5,5 @@ db:
   synchronize: true
 
 jwt:
-  secret: 'top-secret'
+  secret: 'TZrt4kSxQ>9zT3}N`)c$"HMRJn9/at4!'
   expiresIn: 86400000
