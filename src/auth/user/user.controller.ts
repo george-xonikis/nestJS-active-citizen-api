@@ -4,6 +4,7 @@ import {GetUser} from './get-user.decorator';
 import {UserService} from './user.service';
 import {User} from './user.entity';
 import {ChangePasswordDto} from '../dto/change-password.dto';
+import {ChangeUserProfileDto} from '../dto/change-user-profile.dto';
 
 @Controller('user')
 @UseGuards(AuthGuard())
@@ -14,6 +15,11 @@ export class UserController {
     @Get('/profile')
     getUserProfile(@GetUser() user: User): Promise<Partial<User>> {
         return this.userService.getUserProfile(user);
+    }
+
+    @Patch('/profile')
+    changeUserProfile(@GetUser() user: User, @Body() changeUserProfileDto: ChangeUserProfileDto): Promise<Partial<User>> {
+        return this.userService.changeUserProfile(user, changeUserProfileDto);
     }
 
     @Patch('/change-password')

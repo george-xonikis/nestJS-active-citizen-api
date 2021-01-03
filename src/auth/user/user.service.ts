@@ -5,6 +5,7 @@ import {User} from './user.entity';
 import {ChangePasswordDto} from '../dto/change-password.dto';
 import {AuthService} from '../auth.service';
 import {extractUserProfile} from './helper';
+import {ChangeUserProfileDto} from '../dto/change-user-profile.dto';
 
 
 @Injectable()
@@ -14,6 +15,12 @@ export class UserService {
     }
 
     async getUserProfile(user: User): Promise<Partial<User>> {
+        return extractUserProfile(user);
+    }
+
+    async changeUserProfile(user: User, changeUserProfileDto: ChangeUserProfileDto): Promise<Partial<User>> {
+        Object.assign(user, changeUserProfileDto);
+        await this.userRepository.saveUser(user)
         return extractUserProfile(user);
     }
 
