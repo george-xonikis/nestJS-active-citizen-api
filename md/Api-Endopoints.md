@@ -15,7 +15,7 @@ RestAPI for the Active Citizen, an app which promotes people to be more engaged 
 - POST: Reset password confirm
   ```/auth/reset-password/confirm```  
   
-### 2. User
+### 2. Users
 - GET: Get User’s profile 
   ```/user/profile```
 - PATCH: Change User’s password

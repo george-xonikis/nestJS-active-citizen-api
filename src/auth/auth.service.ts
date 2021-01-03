@@ -1,7 +1,7 @@
 import {BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException} from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {InjectRepository} from '@nestjs/typeorm';
-import {AuthCredentialsDto, extractUserProfile} from './dto/auth-credentials.dto';
+import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 import {AuthRepository} from './auth.repository';
 import {UserActivationDto} from './dto/user-activation.dto';
 import {Base64} from 'js-base64';
@@ -13,6 +13,7 @@ import * as config from 'config';
 import {ResetPasswordDto} from './dto/reset-password.dto';
 import {ResetPasswordConfirmDto} from './dto/reset-password-confirm.dto';
 import {sendRegistrationEmail} from './utils/send-registration-email';
+import {extractUserProfile} from './user/helper';
 
 
 const jwtConfig = config.get('jwt');

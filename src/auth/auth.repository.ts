@@ -1,8 +1,9 @@
 import {Repository, EntityRepository} from 'typeorm';
 import {BadRequestException, ConflictException, InternalServerErrorException, UnauthorizedException} from '@nestjs/common';
-import {AuthCredentialsDto, extractUserProfile, getActivationCode} from './dto/auth-credentials.dto';
+import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 import {UserRepository} from './user/user.repository';
 import {User} from './user/user.entity';
+import {extractUserProfile, getActivationCode} from './user/helper';
 
 
 @EntityRepository(User)
