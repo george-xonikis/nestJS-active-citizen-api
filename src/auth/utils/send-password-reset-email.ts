@@ -20,8 +20,7 @@ export const sendPasswordResetEmail = async (email: string, token: string, link?
             from: emailConfig.from,
             to: email,
             subject: 'Active Citizen - Reset Password',
-            // html: passwordResetEmailHtml(Base64.encode(email), Base64.encode(token), link)
-            html: passwordResetEmailHtml(Base64.encode(email), token, link)
+            html: passwordResetEmailHtml(Base64.encode(email, true), token, link)
         });
 
         return true;
@@ -60,7 +59,7 @@ const passwordResetEmailHtml = (email:string, token: string, link?: string): str
                 <tr>
                     <td>
                         <div>
-                            <a href="http://localhost:3000/auth/activate/${email}/${token}"
+                            <a href="http://localhost:4200/auth/password/reset/confirm/${email}/${token}"
                                style="background-color: #334A7C; color: #ffffff; display:inline-block; font-family:sans-serif; font-size:14px;
                                        line-height:50px; text-align:center; text-decoration:none; width:200px; -webkit-text-size-adjust:none; mso-hide:all;">
                                 Complete Registration
@@ -76,7 +75,7 @@ const passwordResetEmailHtml = (email:string, token: string, link?: string): str
             </p>
             
             <p id='link' style="color: #1f5cce; font-size: 14px;">
-                http://localhost:3000/auth/activate/${email}/${token}
+                http://localhost:4200/auth/password/reset/confirm/${email}/${token}
             </p>
             
             <br><br>

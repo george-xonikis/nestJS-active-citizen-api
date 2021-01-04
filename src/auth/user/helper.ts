@@ -5,6 +5,8 @@ export const extractUserProfile = (user: User): Partial<User> => {
     delete user.username;
     delete user.password;
     delete user.activationCode;
+    delete user.active;
+    delete user.isAdmin;
     return user;
 };
 export const getActivationCode = (): string => {

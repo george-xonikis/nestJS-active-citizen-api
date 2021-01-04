@@ -31,7 +31,7 @@ export class AuthRepository extends Repository<User> {
 
         } catch (error) {
             if (error.code === '23505') { // duplicated email
-                throw new ConflictException('Email already exists');
+                throw new ConflictException({code: 'email_exists', message: 'Email already exists'});
             } else {
                 throw new InternalServerErrorException();
             }
@@ -41,8 +41,12 @@ export class AuthRepository extends Repository<User> {
     async activateUser(email: string, activationCode: string): Promise<Partial<User>> {
         const user = await this.userRepository.getUser(email);
 
+        if (user.active) {
+            throw new BadRequestException({code: 'active_error', message: 'Account already activated'});
+        }
+
         if (user.activationCode !== activationCode) {
-            throw new BadRequestException('Invalid Email or Activation Code');
+            throw new BadRequestException({code: 'email_or_activation_code_error', message: 'Invalid Email or Activation Code'});
         }
 
         user.active = true;

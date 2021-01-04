@@ -11,7 +11,7 @@ import {UserRepository} from './user/user.repository';
 import {sendPasswordResetEmail} from './utils/send-password-reset-email';
 import * as config from 'config';
 import {ResetPasswordDto} from './dto/reset-password.dto';
-import {ResetPasswordConfirmDto} from './dto/reset-password-confirm.dto';
+import {PasswordResetConfirmDto} from './dto/password-reset-confirm.dto';
 import {sendRegistrationEmail} from './utils/send-registration-email';
 import {extractUserProfile} from './user/helper';
 
@@ -25,7 +25,7 @@ export class AuthService {
                 private jwtService: JwtService) {
     }
 
-    async signUp(authCredentialsDto: AuthCredentialsDto): Promise<string> {
+    async signUp(authCredentialsDto: AuthCredentialsDto): Promise<{message: string}> {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await this.hashPassword(authCredentialsDto.password, salt);
 
@@ -38,7 +38,7 @@ export class AuthService {
             throw new InternalServerErrorException(null, 'Registration email was not sent');
         }
 
-        return 'User signup successfully';
+        return {message: 'User signup successfully'};
     }
 
     async login(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string, user: Partial<User> }> {
@@ -66,8 +66,12 @@ export class AuthService {
         return this.authRepository.activateUser(decodedEmail, decodedActivationCode);
     }
 
-    async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
-        await this.userRepository.getUser(resetPasswordDto.email);
+    async passwordReset(resetPasswordDto: ResetPasswordDto): Promise<{message: string}> {
+        const user = await this.userRepository.getUser(resetPasswordDto.email);
+
+        if (!user) {
+            throw new UnauthorizedException('Invalid credentials');
+        }
 
         const temporaryToken = this.generateToken(resetPasswordDto.email, 60 * 60 * 24); // Expires in 24 hours
 
@@ -76,20 +80,22 @@ export class AuthService {
         if (!isEmailSent) {
             throw new InternalServerErrorException(null, 'Password reset email was not sent');
         }
+
+        return {message: 'Password reset email was sent'}
     }
 
-    async resetPasswordConfirm(resetPasswordConfirmDto: ResetPasswordConfirmDto): Promise<Partial<User>> {
-        if (resetPasswordConfirmDto.newPassword !== resetPasswordConfirmDto.passwordRepeat) {
+    async passwordResetConfirm(passwordResetConfirmDto: PasswordResetConfirmDto): Promise<Partial<User>> {
+        if (passwordResetConfirmDto.newPassword !== passwordResetConfirmDto.passwordRepeat) {
             throw new BadRequestException('Passwords do not match');
         }
 
         try {
-            const payload = this.jwtService.verify(resetPasswordConfirmDto.token);
+            const payload = this.jwtService.verify(passwordResetConfirmDto.token);
             const email = payload.email;
 
-            if (email === resetPasswordConfirmDto.email) {
+            if (email === passwordResetConfirmDto.email) {
                 const user = await this.userRepository.getUser(email);
-                user.password = await this.hashPassword(resetPasswordConfirmDto.newPassword, user.salt);
+                user.password = await this.hashPassword(passwordResetConfirmDto.newPassword, user.salt);
                 await this.userRepository.saveUser(user);
                 return extractUserProfile(user);
             }

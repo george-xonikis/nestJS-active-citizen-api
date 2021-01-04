@@ -46,6 +46,9 @@ export class User extends BaseEntity {
     @Column({nullable: true})
     phone: string;
 
+    @Column({nullable: true})
+    languages: string;
+
     @Column({nullable: false, readonly: true})
     activationCode: string;
 

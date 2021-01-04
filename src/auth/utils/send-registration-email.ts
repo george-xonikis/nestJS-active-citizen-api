@@ -20,7 +20,7 @@ export const sendRegistrationEmail = async (email: string, activationCode: strin
             from: emailConfig.from,
             to: email,
             subject: subject || 'Active Citizen ✔',
-            html: registrationEmailHtml(Base64.encode(email), Base64.encode(activationCode), link)
+            html: registrationEmailHtml(Base64.encode(email, true), Base64.encode(activationCode, true), link)
         });
 
         return true;
@@ -59,7 +59,7 @@ const registrationEmailHtml = (email:string, activationCode: string, link?: stri
                 <tr>
                     <td>
                         <div>
-                            <a href="http://localhost:3000/auth/activate/${email}/${activationCode}"
+                            <a href="http://localhost:4200/auth/signup/activate/${email}/${activationCode}"
                                style="background-color: #334A7C; color: #ffffff; display:inline-block; font-family:sans-serif; font-size:14px;
                                        line-height:50px; text-align:center; text-decoration:none; width:200px; -webkit-text-size-adjust:none; mso-hide:all;">
                                 Complete Registration
@@ -75,7 +75,7 @@ const registrationEmailHtml = (email:string, activationCode: string, link?: stri
             </p>
             
             <p id='link' style="color: #1f5cce; font-size: 14px;">
-                http://localhost:3000/auth/activate/${email}/${activationCode}
+                http://localhost:4200/auth/signup/activate/${email}/${activationCode}
             </p>
             
             <br><br>
