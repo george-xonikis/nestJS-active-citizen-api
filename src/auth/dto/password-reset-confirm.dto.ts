@@ -1,8 +1,7 @@
-import {IsEmail, IsString} from 'class-validator';
+import {IsString} from 'class-validator';
 
 export class PasswordResetConfirmDto {
     @IsString()
-    @IsEmail()
     email: string;
 
     @IsString()

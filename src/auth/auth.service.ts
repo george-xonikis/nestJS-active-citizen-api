@@ -25,7 +25,7 @@ export class AuthService {
                 private jwtService: JwtService) {
     }
 
-    async signUp(authCredentialsDto: AuthCredentialsDto): Promise<{message: string}> {
+    async signUp(authCredentialsDto: AuthCredentialsDto): Promise<{ message: string }> {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await this.hashPassword(authCredentialsDto.password, salt);
 
@@ -66,7 +66,7 @@ export class AuthService {
         return this.authRepository.activateUser(decodedEmail, decodedActivationCode);
     }
 
-    async passwordReset(resetPasswordDto: ResetPasswordDto): Promise<{message: string}> {
+    async passwordReset(resetPasswordDto: ResetPasswordDto): Promise<{ message: string }> {
         const user = await this.userRepository.getUser(resetPasswordDto.email);
 
         if (!user) {
@@ -81,7 +81,7 @@ export class AuthService {
             throw new InternalServerErrorException(null, 'Password reset email was not sent');
         }
 
-        return {message: 'Password reset email was sent'}
+        return {message: 'Password reset email was sent'};
     }
 
     async passwordResetConfirm(passwordResetConfirmDto: PasswordResetConfirmDto): Promise<Partial<User>> {
@@ -93,7 +93,7 @@ export class AuthService {
             const payload = this.jwtService.verify(passwordResetConfirmDto.token);
             const email = payload.email;
 
-            if (email === passwordResetConfirmDto.email) {
+            if (email === Base64.decode(passwordResetConfirmDto.email)) {
                 const user = await this.userRepository.getUser(email);
                 user.password = await this.hashPassword(passwordResetConfirmDto.newPassword, user.salt);
                 await this.userRepository.saveUser(user);
