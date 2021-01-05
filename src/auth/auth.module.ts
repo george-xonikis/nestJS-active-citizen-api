@@ -10,6 +10,8 @@ import * as config from 'config';
 import {UserController} from './user/user.controller';
 import {UserService} from './user/user.service';
 import {AuthRepository} from './auth.repository';
+import {TokenService} from './token/token.service';
+import {TokenRepository} from './token/token.repository';
 
 const jwtConfig = config.get('jwt');
 
@@ -33,6 +35,8 @@ const jwtConfig = config.get('jwt');
     providers: [
         AuthService,
         AuthRepository,
+        TokenService,
+        TokenRepository,
         UserService,
         JwtStrategy,
     ],

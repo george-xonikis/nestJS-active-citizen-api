@@ -6,6 +6,7 @@ import {User} from './user/user.entity';
 import {ResetPasswordDto} from './dto/reset-password.dto';
 import {PasswordResetConfirmDto} from './dto/password-reset-confirm.dto';
 
+
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) {

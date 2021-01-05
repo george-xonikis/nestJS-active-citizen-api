@@ -1,15 +1,18 @@
 import {AuthGuard} from '@nestjs/passport';
-import {Body, Controller, Get, Patch, UseGuards} from '@nestjs/common';
-import {GetUser} from './get-user.decorator';
+import {Body, Controller, Get, Patch, Post, UseGuards} from '@nestjs/common';
 import {UserService} from './user.service';
 import {User} from './user.entity';
 import {ChangePasswordDto} from '../dto/change-password.dto';
 import {ChangeUserProfileDto} from '../dto/change-user-profile.dto';
+import {GetUser} from '../../shared/decorators/get-user.decorator';
+import {GetToken} from '../../shared/decorators/get-token.decorator';
+import {TokenService} from '../token/token.service';
 
 @Controller('user')
 @UseGuards(AuthGuard())
 export class UserController {
-    constructor(private userService: UserService) {
+    constructor(private userService: UserService,
+                private tokenService: TokenService) {
     }
 
     @Get('/profile')
@@ -25,6 +28,11 @@ export class UserController {
     @Patch('/change-password')
     changePassword(@GetUser() user: User, @Body() changePasswordDto: ChangePasswordDto): Promise<Partial<User>> {
         return this.userService.changePassword(user, changePasswordDto);
+    }
+
+    @Post('/logout')
+    logout(@GetToken() token: string): Promise<{ message: string }> {
+        return this.tokenService.addToken(token);
     }
 
 }
