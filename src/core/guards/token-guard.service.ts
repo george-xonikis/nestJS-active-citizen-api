@@ -1,5 +1,6 @@
 import {CanActivate, ExecutionContext, Injectable, UnauthorizedException} from '@nestjs/common';
 import {TokenService} from '../../token/token.service';
+import {AuthController} from '../../auth/auth.controller';
 
 
 @Injectable()
@@ -17,7 +18,8 @@ export class TokenGuard implements CanActivate {
         const request = host.getRequest();
         const bearer = request.headers.authorization && request.headers.authorization.replace('Bearer ', '');
 
-        if (!bearer) {
+        /** Allow requests which are handled by Auth Controller */
+        if (context.getClass() === AuthController) {
             return true;
         }
 
