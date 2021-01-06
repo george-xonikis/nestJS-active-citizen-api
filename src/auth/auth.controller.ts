@@ -2,9 +2,9 @@ import {Controller, Post, Body, Patch} from '@nestjs/common';
 import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 import {AuthService} from './auth.service';
 import {UserActivationDto} from './dto/user-activation.dto';
-import {User} from './user/user.entity';
 import {ResetPasswordDto} from './dto/reset-password.dto';
 import {PasswordResetConfirmDto} from './dto/password-reset-confirm.dto';
+import {User} from '../user/user.entity';
 
 
 @Controller('auth')

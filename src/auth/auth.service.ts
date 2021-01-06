@@ -5,15 +5,15 @@ import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 import {AuthRepository} from './auth.repository';
 import {UserActivationDto} from './dto/user-activation.dto';
 import {Base64} from 'js-base64';
-import {User} from './user/user.entity';
 import * as bcrypt from 'bcryptjs';
-import {UserRepository} from './user/user.repository';
 import {sendPasswordResetEmail} from './utils/send-password-reset-email';
 import * as config from 'config';
 import {ResetPasswordDto} from './dto/reset-password.dto';
 import {PasswordResetConfirmDto} from './dto/password-reset-confirm.dto';
 import {sendRegistrationEmail} from './utils/send-registration-email';
-import {extractUserProfile} from './user/helper';
+import {UserRepository} from '../user/user.repository';
+import {extractUserProfile} from '../user/helper';
+import {User} from '../user/user.entity';
 
 
 const jwtConfig = config.get('jwt');

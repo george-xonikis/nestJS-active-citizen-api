@@ -2,10 +2,10 @@ import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/co
 import {InjectRepository} from '@nestjs/typeorm';
 import {UserRepository} from './user.repository';
 import {User} from './user.entity';
-import {ChangePasswordDto} from '../dto/change-password.dto';
-import {AuthService} from '../auth.service';
 import {extractUserProfile} from './helper';
-import {ChangeUserProfileDto} from '../dto/change-user-profile.dto';
+import {AuthService} from '../auth/auth.service';
+import {ChangeUserProfileDto} from '../auth/dto/change-user-profile.dto';
+import {ChangePasswordDto} from '../auth/dto/change-password.dto';
 
 
 @Injectable()
