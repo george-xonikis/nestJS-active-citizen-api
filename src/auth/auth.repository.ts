@@ -1,5 +1,5 @@
 import {Repository, EntityRepository} from 'typeorm';
-import {BadRequestException, ConflictException, InternalServerErrorException, UnauthorizedException} from '@nestjs/common';
+import {BadRequestException, ConflictException, InternalServerErrorException} from '@nestjs/common';
 import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 import {UserRepository} from './user/user.repository';
 import {User} from './user/user.entity';
@@ -14,11 +14,9 @@ export class AuthRepository extends Repository<User> {
     }
 
     async createUser(authCredentialsDto: AuthCredentialsDto, hashedPassword: string, salt: string): Promise<User> {
-        const {email, password} = authCredentialsDto;
-
         const user = new User();
-        user.email = email;
-        user.username = email;
+        user.email = authCredentialsDto.email;
+        user.username = authCredentialsDto.email;
         user.isAdmin = false;
         user.activationCode = getActivationCode();
         user.salt = salt;
