@@ -20,3 +20,5 @@ RestAPI for the Active Citizen, an app which promotes people to be more engaged 
   ```/user/profile```
 - PATCH: Change User’s password
   ```/user/change-paswword```
+- POST: Logout (add JWT to invalid tokens)
+  ```/user/logout```

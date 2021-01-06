@@ -7,7 +7,7 @@ export class TokenRepository extends Repository<Token> {
 
     public async addToken(_token: string, _expiresIn: number): Promise<{ message: string }> {
         const token = new Token();
-        token.token = _token;
+        token.bearer = _token;
         token.expiresIn = _expiresIn;
 
         try {
@@ -20,7 +20,7 @@ export class TokenRepository extends Repository<Token> {
 
     public async getToken(token: string): Promise<Token> {
         try {
-            return await this.findOne({token});
+            return await this.findOne({bearer: token});
         } catch (err) {
             throw new BadRequestException({message: 'Token not found'})
         }

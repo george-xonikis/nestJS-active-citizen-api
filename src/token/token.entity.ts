@@ -7,7 +7,7 @@ export class Token extends BaseEntity {
     id: number;
 
     @Column()
-    token: string;
+    bearer: string;
 
     @Column()
     expiresIn: number;

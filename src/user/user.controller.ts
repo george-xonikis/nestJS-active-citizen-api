@@ -32,8 +32,8 @@ export class UserController {
     }
 
     @Post('/logout')
-    logout(@GetToken() token: string): Promise<{ message: string }> {
-        return this.tokenService.addToken(token);
+    logout(@GetToken() bearer: string): Promise<{ message: string }> {
+        return this.tokenService.addToken(bearer);
     }
 
 }

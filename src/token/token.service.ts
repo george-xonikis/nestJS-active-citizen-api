@@ -10,15 +10,15 @@ export class TokenService {
                 private authService: AuthService) {
     }
 
-    public async addToken(token: string): Promise<{ message: string }> {
+    public async addToken(bearer: string): Promise<{ message: string }> {
         /** When the users logout, the token is added in the invalids list */
-        const payload = this.authService.verifyToken(token);
-        return this.tokenRepository.addToken(token, Number(payload.exp));
+        const payload = this.authService.verifyToken(bearer);
+        return this.tokenRepository.addToken(bearer, Number(payload.exp));
     }
 
-    public async isTokenInvalid(token: string): Promise<Boolean> {
+    public async isTokenInvalid(bearer: string): Promise<Boolean> {
         /** If token exists in db, is means that this token is invalid */
-        const tokenInstance = await this.tokenRepository.getToken(token)
+        const tokenInstance = await this.tokenRepository.getToken(bearer);
         return !!tokenInstance;
     }
 }

@@ -15,13 +15,13 @@ export class TokenGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const host = context.switchToHttp()
         const request = host.getRequest();
-        const token = request.headers.authorization && request.headers.authorization.replace('Bearer ', '');
+        const bearer = request.headers.authorization && request.headers.authorization.replace('Bearer ', '');
 
-        if (!token) {
+        if (!bearer) {
             return true;
         }
 
-        const isTokenInvalid = await this.tokenService.isTokenInvalid(token)
+        const isTokenInvalid = await this.tokenService.isTokenInvalid(bearer)
 
         if (isTokenInvalid) {
             throw new UnauthorizedException('Token is not valid');
