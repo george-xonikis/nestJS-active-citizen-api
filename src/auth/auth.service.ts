@@ -107,6 +107,10 @@ export class AuthService {
     }
 
     /** Helper methods */
+    public verifyToken(token: string) {
+        return this.jwtService.verify(token);
+
+    }
     public async isPasswordValid(passwordInput: string, password: string, salt: string): Promise<boolean> {
         const hash = await bcrypt.hash(passwordInput, salt);
         return hash === password;

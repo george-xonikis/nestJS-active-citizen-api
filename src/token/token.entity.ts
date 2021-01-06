@@ -14,5 +14,4 @@ export class Token extends BaseEntity {
 
     @Column({default: true})
     invalid: boolean;
-
 }

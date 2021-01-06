@@ -3,11 +3,13 @@ import {UserController} from './user.controller';
 import {UserService} from './user.service';
 import {UserRepository} from './user.repository';
 import {AuthModule} from '../auth/auth.module';
+import {TokenModule} from '../token/token.module';
 
 
 @Module({
     imports: [
         AuthModule,
+        TokenModule
     ],
     controllers: [
         UserController

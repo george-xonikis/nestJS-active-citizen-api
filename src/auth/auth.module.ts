@@ -7,9 +7,8 @@ import {PassportModule} from '@nestjs/passport';
 import {JwtStrategy} from './jwt/jwt.strategy';
 import * as config from 'config';
 import {AuthRepository} from './auth.repository';
-import {TokenService} from './token/token.service';
-import {TokenRepository} from './token/token.repository';
 import {UserRepository} from '../user/user.repository';
+
 
 const jwtConfig = config.get('jwt');
 
@@ -32,14 +31,12 @@ const jwtConfig = config.get('jwt');
     providers: [
         AuthService,
         AuthRepository,
-        TokenService,
-        TokenRepository,
-        JwtStrategy,
+        JwtStrategy
     ],
     exports: [
         PassportModule,
         AuthService,
-        TokenService
+        JwtStrategy
     ],
 })
 export class AuthModule {

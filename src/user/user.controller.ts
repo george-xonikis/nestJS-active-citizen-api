@@ -2,11 +2,12 @@ import {AuthGuard} from '@nestjs/passport';
 import {Body, Controller, Get, Patch, Post, UseGuards} from '@nestjs/common';
 import {UserService} from './user.service';
 import {User} from './user.entity';
-import {TokenService} from '../auth/token/token.service';
-import {GetUser} from '../shared/decorators/get-user.decorator';
+import {TokenService} from '../token/token.service';
+import {GetUser} from '../core/decorators/get-user.decorator';
 import {ChangePasswordDto} from '../auth/dto/change-password.dto';
 import {ChangeUserProfileDto} from '../auth/dto/change-user-profile.dto';
-import {GetToken} from '../shared/decorators/get-token.decorator';
+import {GetToken} from '../core/decorators/get-token.decorator';
+
 
 @Controller('user')
 @UseGuards(AuthGuard())

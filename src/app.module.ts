@@ -5,15 +5,26 @@ import {AuthModule} from './auth/auth.module';
 import {TypeOrmCoreModule} from '@nestjs/typeorm/dist/typeorm-core.module';
 import {typeOrmConfig} from './config/typeorm.config';
 import {UserModule} from './user/user.module';
+import {TokenModule} from './token/token.module';
+import {APP_GUARD} from '@nestjs/core';
+import {TokenGuard} from './core/guards/token-guard.service';
+
 
 @Module({
     imports: [
         TypeOrmCoreModule.forRoot(typeOrmConfig),
         AuthModule,
-        UserModule
+        UserModule,
+        TokenModule
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [
+        AppService,
+        {
+            provide: APP_GUARD,
+            useClass: TokenGuard,
+        },
+    ],
 })
 export class AppModule {
 }

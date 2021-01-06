@@ -3,6 +3,7 @@ import {AppModule} from './app.module';
 import {Logger, ValidationPipe} from '@nestjs/common';
 import * as config from 'config';
 
+
 async function bootstrap() {
     const serverConfig = config.get('server');
     const logger = new Logger('Bootstrap');
