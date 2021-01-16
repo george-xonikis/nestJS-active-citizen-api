@@ -62,7 +62,7 @@ const passwordResetEmailHtml = (email:string, token: string, link?: string): str
                             <a href="http://localhost:4200/auth/password/reset/confirm/${email}/${token}"
                                style="background-color: #334A7C; color: #ffffff; display:inline-block; font-family:sans-serif; font-size:14px;
                                        line-height:50px; text-align:center; text-decoration:none; width:200px; -webkit-text-size-adjust:none; mso-hide:all;">
-                                Complete Registration
+                                Reset Password
                             </a>
                         </div>
                     </td>

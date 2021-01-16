@@ -16,10 +16,10 @@ export class User extends BaseEntity {
     @Column({nullable: true})
     lastName: string;
 
-    @Column({unique: true, nullable: false})
+    @Column({unique: true, nullable: false, readonly: true})
     username: string;
 
-    @Column({unique: true, nullable: false})
+    @Column({unique: true, nullable: false, readonly: true})
     email: string;
 
     @Column()

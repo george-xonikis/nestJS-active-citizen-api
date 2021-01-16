@@ -23,7 +23,7 @@ export class TokenGuard implements CanActivate {
             return true;
         }
 
-        const isTokenInvalid = await this.tokenService.isTokenInvalid(bearer)
+        const isTokenInvalid = await this.tokenService.isTokenInvalid(bearer);
 
         if (isTokenInvalid) {
             throw new UnauthorizedException('Token is not valid');
