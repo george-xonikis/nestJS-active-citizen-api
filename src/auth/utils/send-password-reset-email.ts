@@ -19,7 +19,7 @@ export const sendPasswordResetEmail = async (email: string, token: string, link?
         await transporter.sendMail({
             from: emailConfig.from,
             to: email,
-            subject: 'Active Citizen - Reset Password',
+            subject: 'Active Citizen - Password Reset',
             html: passwordResetEmailHtml(Base64.encode(email, true), token, link)
         });
 
@@ -46,13 +46,11 @@ const passwordResetEmailHtml = (email:string, token: string, link?: string): str
             
             <body style="text-align: center; color: #717070; font-weight: bold;">
             
-            <h1>Welcome to Active Citizen</h1>
+            <h1>Active Citizen</h1>
             
-            <h2>Thanks for signing-up!</h2>
+            <h2>Password reset</h2>
             
-            <h3>
-                Click on the button to complete your registration
-            </h3>
+            <h3>Click the button to reset your password</h3>
             
             <!-- Button -->
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -70,8 +68,7 @@ const passwordResetEmailHtml = (email:string, token: string, link?: string): str
             </table>
             
             <p>
-                If you are unable to use the registration button, please copy
-                and paste the below link into the address bar of your web browser.
+                If you are unable to click the button, please copy and paste the below link into the address bar of your web browser.
             </p>
             
             <p id='link' style="color: #1f5cce; font-size: 14px;">

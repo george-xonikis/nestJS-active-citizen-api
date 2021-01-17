@@ -8,7 +8,7 @@ import {Base64} from 'js-base64';
 import * as bcrypt from 'bcryptjs';
 import {sendPasswordResetEmail} from './utils/send-password-reset-email';
 import * as config from 'config';
-import {ResetPasswordDto} from './dto/reset-password.dto';
+import {PasswordResetDto} from './dto/password-reset.dto';
 import {PasswordResetConfirmDto} from './dto/password-reset-confirm.dto';
 import {sendRegistrationEmail} from './utils/send-registration-email';
 import {UserRepository} from '../user/user.repository';
@@ -66,7 +66,7 @@ export class AuthService {
         return this.authRepository.activateUser(decodedEmail, decodedActivationCode);
     }
 
-    async passwordReset(resetPasswordDto: ResetPasswordDto): Promise<{ message: string }> {
+    async passwordReset(resetPasswordDto: PasswordResetDto): Promise<{ message: string }> {
         const user = await this.userRepository.getUser(resetPasswordDto.email);
 
         if (!user) {

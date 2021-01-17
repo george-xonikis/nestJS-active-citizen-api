@@ -51,7 +51,7 @@ const registrationEmailHtml = (email:string, activationCode: string, link?: stri
             <h2>Thanks for signing-up!</h2>
             
             <h3>
-                Click on the button to complete your registration
+                Click the button to complete your registration
             </h3>
             
             <!-- Button -->

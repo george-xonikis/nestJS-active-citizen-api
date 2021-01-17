@@ -2,7 +2,7 @@ import {Controller, Post, Body, Patch} from '@nestjs/common';
 import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 import {AuthService} from './auth.service';
 import {UserActivationDto} from './dto/user-activation.dto';
-import {ResetPasswordDto} from './dto/reset-password.dto';
+import {PasswordResetDto} from './dto/password-reset.dto';
 import {PasswordResetConfirmDto} from './dto/password-reset-confirm.dto';
 import {User} from '../user/user.entity';
 
@@ -28,7 +28,7 @@ export class AuthController {
     }
 
     @Post('/password-reset')
-    passwordReset(@Body() resetPasswordDto: ResetPasswordDto): Promise<{message: string}> {
+    passwordReset(@Body() resetPasswordDto: PasswordResetDto): Promise<{message: string}> {
         return this.authService.passwordReset(resetPasswordDto);
     }
 
