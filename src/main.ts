@@ -9,7 +9,12 @@ async function bootstrap() {
     const logger = new Logger('Bootstrap');
     const app = await NestFactory.create(AppModule);
 
-    app.enableCors();
+    if (process.env.NODE_ENV === 'development') {
+        app.enableCors();
+    } else {
+        app.enableCors( {origin: serverConfig.origin});
+        logger.log(`Accepting requests from origin: ${serverConfig.origin}`)
+    }
 
     /** Use validation pipes in all controllers */
     app.useGlobalPipes(new ValidationPipe());
