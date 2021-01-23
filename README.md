@@ -1,25 +1,25 @@
 ## NestJS REST API for Active Citizen
 Active Citizen is a project to enhance people's engagement with their communities. 
 
-## Powered by
-### 1. NestJS
+### Powered by
+#### 1. NestJS
 <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 
-### Description
+#### Description
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-### Support
+#### Support
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-### Stay in touch
+#### Stay in touch
 - Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
 - Website - [https://nestjs.com](https://nestjs.com/)
 - Twitter - [@nestframework](https://twitter.com/nestframework)
 
-### License
+#### License
 Nest is [MIT licensed](LICENSE).
 
-### 2. Postgres
+#### 2. Postgres
 <a href="http://postgresql.org/" target="blank"><img src="https://www.postgresql.org/media/img/about/press/elephant.png" width="150" alt="postgres Logo" /></a>
 
 PostgreSQL has a wide variety of community and commercial support options available for users, including:
@@ -31,8 +31,8 @@ PostgreSQL has a wide variety of community and commercial support options availa
 
 Commercial support is also available from one of the many companies providing professional services to the PostgreSQL community. A list of companies that provide PostgreSQL-specific hosting is also available.
 
-### 3. Deployed on Heroku
+#### 3. Deployed on Heroku
 <a href="http://www.heroku.com//" target="blank"><img src="https://brand.heroku.com/static/media/heroku-logotype-horizontal.81c49462.svg" width="150" alt="Heroku Logo" /></a>
 
-### Documentation
+#### Documentation
 https://devcenter.heroku.com/
