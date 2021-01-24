@@ -8,12 +8,13 @@ async function bootstrap() {
     const serverConfig = config.get('server');
     const logger = new Logger('Bootstrap');
     const app = await NestFactory.create(AppModule);
+    const origin = 'https://active-citizen-staging.herokuapp.com';
 
     if (process.env.NODE_ENV === 'development') {
         app.enableCors();
     } else {
-        app.enableCors( {origin: serverConfig.origin});
-        logger.log(`Accepting requests from origin: ${serverConfig.origin}`)
+        app.enableCors( {origin});
+        logger.log(`Accepting requests from origin: ${origin}`)
     }
 
     /** Use validation pipes in all controllers */
