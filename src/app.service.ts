@@ -9,7 +9,7 @@ export class AppService {
         return {
             message: 'Hello World!',
             environment: process.env.NODE_ENV,
-            port: process.env.APP_PORT,
+            port: process.env.PORT,
             origin: this.serverConfig.origin
         };
     }

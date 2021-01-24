@@ -19,7 +19,7 @@ async function bootstrap() {
     /** Use validation pipes in all controllers */
     app.useGlobalPipes(new ValidationPipe());
 
-    const port = process.env.APP_PORT || serverConfig.port;
+    const port = process.env.PORT || serverConfig.port;
     await app.listen(port);
     logger.log(`App Started Successfully on port ${port}`);
 }

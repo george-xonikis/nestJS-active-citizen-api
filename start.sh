@@ -6,4 +6,6 @@ then
 elif [[ $NODE_ENV == "production" ]]
 then
   node dist/main
+else
+  NODE_ENV=development nest start --debug --watch
 fi
