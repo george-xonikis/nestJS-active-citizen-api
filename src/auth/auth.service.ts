@@ -33,7 +33,7 @@ export class AuthService {
         const user = await this.authRepository.createUser(authCredentialsDto, hashedPassword, salt);
 
         const html = registrationEmailHtml(Base64.encode(user.email, true), Base64.encode(user.activationCode, true));
-        const isEmailSent = await sendEmail(user.email, html, 'Active Citizen Registration ✔');
+        const isEmailSent = await sendEmail(user.email, html, 'Registration ✔');
 
         if (!isEmailSent) {
             /** If email was failed, delete the created user instance since without the email the user cannot be activated */
@@ -79,7 +79,7 @@ export class AuthService {
         const temporaryToken = this.generateToken(resetPasswordDto.email, 60 * 60 * 24); // Expires in 24 hours
 
         const html = passwordResetEmailHtml(Base64.encode(resetPasswordDto.email, true), temporaryToken);
-        const isEmailSent = await sendEmail(resetPasswordDto.email, html, 'Active Citizen - Password Reset ✔');
+        const isEmailSent = await sendEmail(resetPasswordDto.email, html, 'Password Reset ✔');
 
         if (!isEmailSent) {
             throw new InternalServerErrorException(null, 'Password reset email was not sent');

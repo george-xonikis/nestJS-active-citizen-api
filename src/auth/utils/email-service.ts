@@ -19,7 +19,7 @@ export const sendEmail = async (email: string, html: string, subject?: string): 
         });
 
         await transporter.sendMail({
-            from: process.env.EMAIL_ADDRESS || credentials.emailAddress,
+            from: `Active Citizen ${process.env.EMAIL_ADDRESS || credentials.emailAddress}`,
             to: email,
             subject: subject || 'Active Citizen',
             html: html
