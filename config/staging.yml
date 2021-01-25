@@ -1,5 +1,5 @@
 server:
-  origin: https://active-citizen-staging.herokuapp.com
+  host: https://active-citizen-staging.herokuapp.com
 
 db:
   synchronize: false

@@ -6,14 +6,15 @@ import {AuthRepository} from './auth.repository';
 import {UserActivationDto} from './dto/user-activation.dto';
 import {Base64} from 'js-base64';
 import * as bcrypt from 'bcryptjs';
-import {sendPasswordResetEmail} from './utils/send-password-reset-email';
 import * as config from 'config';
 import {PasswordResetDto} from './dto/password-reset.dto';
 import {PasswordResetConfirmDto} from './dto/password-reset-confirm.dto';
-import {sendRegistrationEmail} from './utils/send-registration-email';
 import {UserRepository} from '../user/user.repository';
 import {extractUserProfile} from '../user/helper';
 import {User} from '../user/user.entity';
+import {sendEmail} from './utils/email-service';
+import {registrationEmailHtml} from './utils/registration-email';
+import {passwordResetEmailHtml} from './utils/password-reset-email';
 
 
 const jwtConfig = config.get('jwt');
@@ -30,7 +31,9 @@ export class AuthService {
         const hashedPassword = await this.hashPassword(authCredentialsDto.password, salt);
 
         const user = await this.authRepository.createUser(authCredentialsDto, hashedPassword, salt);
-        const isEmailSent = await sendRegistrationEmail(user.email, user.activationCode);
+
+        const html = registrationEmailHtml(Base64.encode(user.email, true), Base64.encode(user.activationCode, true));
+        const isEmailSent = await sendEmail(user.email, html, 'Active Citizen Registration ✔');
 
         if (!isEmailSent) {
             /** If email was failed, delete the created user instance since without the email the user cannot be activated */
@@ -75,7 +78,8 @@ export class AuthService {
 
         const temporaryToken = this.generateToken(resetPasswordDto.email, 60 * 60 * 24); // Expires in 24 hours
 
-        const isEmailSent = await sendPasswordResetEmail(resetPasswordDto.email, temporaryToken);
+        const html = passwordResetEmailHtml(Base64.encode(resetPasswordDto.email, true), temporaryToken);
+        const isEmailSent = await sendEmail(resetPasswordDto.email, html, 'Active Citizen - Password Reset ✔');
 
         if (!isEmailSent) {
             throw new InternalServerErrorException(null, 'Password reset email was not sent');
@@ -111,6 +115,7 @@ export class AuthService {
         return this.jwtService.verify(token);
 
     }
+
     public async isPasswordValid(passwordInput: string, password: string, salt: string): Promise<boolean> {
         const hash = await bcrypt.hash(passwordInput, salt);
         return hash === password;

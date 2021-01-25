@@ -1,4 +1,10 @@
+server:
+  host: http://localhost:4200
+
 db:
+  type: 'postgres'
+  port: 5432
+  database: 'postgres'
   host: 'localhost'
   username: 'postgres'
   password: 'postgres'
@@ -7,3 +13,14 @@ db:
 jwt:
   secret: 'TZrt4kSxQ>9zT3}N`)c$"HMRJn9/at4!'
   expiresIn: 86400000
+
+emailConfig:
+  emailAddress: 'app.active.citizen@gmail.com'
+  clientID: '225646959745-tcp80mb1nj3gco16iasb3dgd82oja5dh.apps.googleusercontent.com'
+  clientSecret: 'hSDX-vmFCRIjuxqlmG1_1Hrf'
+  tokenType: 'Bearer'
+  accessToken: 'ya29.a0AfH6SMBrAYfT-_T9dBZ6DCkmgyQt9NGwOZxDDGisa8McuwtYMQV74M6X34Tqk8TZ_ZoP0AOzSPk8THVNv4k4nQAsQXnznFMox45SxmQx3lWAJ1x0LmPNNEDDEbtceIxGuo6hsrJ_C2BTNdL4x8clynaQZjlX0b_VTPl4F2lNJFo'
+  refreshToken: '1//04cwYHUGX9TNeCgYIARAAGAQSNwF-L9IrJlMjnD2zrk8J9lnTE3FZU_YVreHzv2-CH_wHFwGHo3NQdr8hntXZLNVmAoYdQMBfJXw'
+  expiresIn: 3599
+  redirectURI: 'https://developers.google.com/oauthplayground'
+  scope: 'https://mail.google.com/'

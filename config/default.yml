@@ -1,17 +1,11 @@
 server:
   port: 3000
 
-db:
-  type: 'postgres'
-  port: 5432
-  database: 'postgres'
-
 jwt:
   expiresIn: 3600
 
 emailConfig:
-  host: 'smtp.gmail.com'
-  port: '587'
-  hostUser: 'test.django.backend@gmail.com'
-  hostPassword: 'VNZ4NVUTa8LM{i38{zCGjCG6ewjaNnR8Njhph@Rf'
-  from: 'test.django.backend@gmail.com'
+  tokenType: 'Bearer'
+  expiresIn: 3600
+  redirectURI: 'https://developers.google.com/oauthplayground'
+  scope: 'https://mail.google.com/'

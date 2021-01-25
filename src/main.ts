@@ -12,8 +12,8 @@ async function bootstrap() {
     if (process.env.NODE_ENV === 'development') {
         app.enableCors();
     } else {
-        app.enableCors( {origin: serverConfig.origin});
-        logger.log(`Accepting requests from origin: ${serverConfig.origin}`)
+        app.enableCors( {origin: serverConfig.host});
+        logger.log(`Accepting requests from origin: ${serverConfig.host}`)
     }
 
     /** Use validation pipes in all controllers */
