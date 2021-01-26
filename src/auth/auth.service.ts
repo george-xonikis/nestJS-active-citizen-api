@@ -12,9 +12,9 @@ import {PasswordResetConfirmDto} from './dto/password-reset-confirm.dto';
 import {UserRepository} from '../user/user.repository';
 import {extractUserProfile} from '../user/helper';
 import {User} from '../user/user.entity';
-import {sendEmail} from './utils/email-service';
-import {registrationEmailHtml} from './utils/registration-email';
-import {passwordResetEmailHtml} from './utils/password-reset-email';
+import {registrationEmailHtml} from './emails/registration-email';
+import {passwordResetEmailHtml} from './emails/password-reset-email';
+import {sendEmail} from '../utils/email-service';
 
 
 const jwtConfig = config.get('jwt');
