@@ -15,9 +15,9 @@ build app:
     - npm --version
     - npm install
     - npm build
-    artifacts:
-      paths:
-        - ./dist
+  artifacts:
+    paths:
+      - ./dist
 
 #testing the app:
 #  stage: test
