@@ -9,13 +9,12 @@ stages:
 #  - test
   - deploy
 
-building the app:
+build app:
   stage: build
   script:
     - npm --version
     - npm install
     - npm build
-    - npm start
 
 #testing the app:
 #  stage: test
