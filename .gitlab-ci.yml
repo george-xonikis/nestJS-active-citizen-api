@@ -1,25 +1,23 @@
-image: gxodocker/active-citizen-dockerhub-repo:node-angular11
+image: node:latest
 
 variables:
   APP_STAGING: active-citizen-api-staging
   APP_PRODUCTION: active-citizen-api-production
 
 stages:
-#  - build
+  - build
 #  - test
   - deploy
 
-#building the app:
-#  stage: build
-#  script:
-#    - ng --version
-#    - npm --version
-#    - npm install
-#    - ng build --output-path dist --aot --prod
-#  artifacts:
-#    paths:
-#      - ./dist
-#
+building the app:
+  stage: build
+  script:
+    - npm --version
+    - npm install
+    - npm prebuild
+    - npm build
+    - npm start
+
 #testing the app:
 #  stage: test
 #  script:
@@ -28,22 +26,17 @@ stages:
 
 deploy to staging:
   stage: deploy
-  image: heroku/heroku:20
+  image: ruby:latest
   script:
-    - apt-get update -qy
-    - apt-get install -y ruby-dev
     - gem install dpl
-    - dpl --provider=heroku --app=active-citizen-api-staging --api-key=09c7301e-2394-4363-801d-9471485fd151
+    - dpl --provider=heroku --app=$APP_STAGING --api-key=$HEROKU_API_KEY_STAGING
   only:
     - master
 
-#deploy to production:
-#  stage: deploy
-#  image: heroku/heroku:20
-#  script:
-#    - apt-get update -qy
-#    - apt-get install -y ruby-dev
-#    - gem install dpl
-#    - dpl --provider=heroku --app=active-citizen-api-staging --api-key=09c7301e-2394-4363-801d-9471485fd151
-#  only:
-#    - production
+deploy to production:
+  stage: deploy
+  image: ruby:latest
+  script:
+    - dpl --provider=heroku --app=$APP_PRODUCTION --api-key=$HEROKU_API_KEY_PRODUCTION
+  only:
+    - production
