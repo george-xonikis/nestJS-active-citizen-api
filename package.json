@@ -1,8 +1,8 @@
 {
-  "name": "p",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "name": "active-citizen-api",
+  "version": "0.1.0",
+  "description": "Api for Active Citizen App",
+  "author": "Giorgos Conikis",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

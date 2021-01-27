@@ -6,7 +6,7 @@ variables:
 
 stages:
   - build
-#  - test
+  #  - test
   - deploy
 
 build app:
@@ -15,6 +15,9 @@ build app:
     - npm --version
     - npm install
     - npm build
+    artifacts:
+      paths:
+        - ./dist
 
 #testing the app:
 #  stage: test
