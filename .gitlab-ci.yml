@@ -14,7 +14,7 @@ building the app:
   script:
     - npm --version
     - npm install
-    - npm run build
+    - npm build
     - npm start
 
 #testing the app:
