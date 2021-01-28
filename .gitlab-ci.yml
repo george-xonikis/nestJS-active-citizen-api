@@ -6,7 +6,7 @@ variables:
 
 stages:
   - build
-  #  - test
+  - test
   - deploy
 
 build app:
@@ -17,13 +17,13 @@ build app:
     - npm build
   artifacts:
     paths:
-      - ./dist
+      - dist
 
-#testing the app:
-#  stage: test
-#  script:
-#    - npm install
-#    - ng test --watch=false
+test app:
+  stage: test
+  script:
+    - npm install
+    - jest
 
 deploy to staging:
   stage: deploy
