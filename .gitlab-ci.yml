@@ -17,13 +17,13 @@ build app:
     - npm build
   artifacts:
     paths:
-      - dist
+      - .dist
 
 test app:
   stage: test
   script:
     - npm install
-    - jest
+    - npm test
 
 deploy to staging:
   stage: deploy
